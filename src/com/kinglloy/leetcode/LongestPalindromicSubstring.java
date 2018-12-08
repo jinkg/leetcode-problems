@@ -22,73 +22,60 @@ public class LongestPalindromicSubstring {
         if (s == null || s.equals("")) {
             return "";
         }
-        int skip = 0;
-        int globalMaxIndex = 0;
 
+        int[] maxResult = new int[2];
         char[] chars = s.toCharArray();
-
-        int globalLength = 0;
-
-        for (int i = 0; i < chars.length; i += (skip + 1)) {
-            int localLength = 1;
-            skip = 0;
-            int left = i - localLength;
-            int right = i + localLength;
-            if (left < 0) {
-                for (; right < chars.length; ) {
-                    if (chars[i] == chars[right]) {
-                        skip++;
-                        localLength++;
-                        right++;
-                    } else {
-                        break;
-                    }
-                }
-            } else {
-                for (; left >= 0 && right < chars.length; left--, right++) {
-                    if (chars[left] == chars[right]) {
-                        localLength++;
-                    } else if (chars[i] == chars[right] && (skip > 0 || (i + 1) == right)) {
-                        skip++;
-                        localLength++;
-                    } else {
-                        break;
-                    }
-                }
-            }
-            int totalLength;
-            if (skip > 0) {
-                totalLength = localLength;
-            } else {
-                totalLength = 2 * localLength - 1;
-            }
-            if (totalLength > globalLength) {
-                globalLength = totalLength;
-                globalMaxIndex = i;
+        for (int i = 0; i < chars.length; i++) {
+            int[] result = getPalindromicLong(chars, i);
+            if (maxResult[1] < result[1]) {
+                maxResult = result;
             }
         }
 
-        if (globalLength == 1) {
-            return String.valueOf(chars[globalMaxIndex]);
-        }
-        if (chars[globalMaxIndex] == chars[globalMaxIndex + 1]) {
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < globalLength; i++) {
-                sb.append(chars[globalMaxIndex]);
+        return s.substring(maxResult[0], maxResult[0] + maxResult[1]);
+    }
+
+    private int[] getPalindromicLong(char[] chars, int position) {
+        int[] result = new int[2];
+        // mode 1
+        int mode1Length = 0;
+        if (position < chars.length - 1) {
+            int start = position;
+            int end = position + 1;
+            while (start >= 0 && end < chars.length && chars[start] == chars[end]) {
+                start--;
+                end++;
+                mode1Length++;
             }
-            return sb.toString();
+            mode1Length *= 2;
+            if (mode1Length > result[1]) {
+                result[0] = start + 1;
+                result[1] = mode1Length;
+            }
         }
 
-        int start = globalMaxIndex - globalLength / 2;
-        int end = globalMaxIndex + globalLength / 2;
-        StringBuilder sb = new StringBuilder();
-        for (int i = start; i <= end; i++) {
-            sb.append(chars[i]);
+        // mode 2
+        int mode2Length = 0;
+        if (position < chars.length && position >= 0) {
+            int start = position - 1;
+            int end = position + 1;
+            while (start >= 0 && end < chars.length && chars[start] == chars[end]) {
+                start--;
+                end++;
+                mode2Length++;
+            }
+            mode2Length *= 2;
+            mode2Length++;
+            if (mode2Length > result[1]) {
+                result[0] = start + 1;
+                result[1] = mode2Length;
+            }
         }
-        return sb.toString();
+
+        return result;
     }
 
     public static void main(String[] args) {
-        System.out.println(new LongestPalindromicSubstring().longestPalindrome("tattarrattat"));
+        System.out.println(new LongestPalindromicSubstring().longestPalindrome("a"));
     }
 }
