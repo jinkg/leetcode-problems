@@ -39,8 +39,8 @@ package com.kinglloy.leetcode;
 public class ZigZagConversion {
 
     public static void main(String[] args) {
-        String s = "abc";
-        int numRows = 2;
+        String s = "PAYPALISHIRING";
+        int numRows = 4;
         System.out.println(convert(s, numRows));
     }
 
@@ -48,57 +48,26 @@ public class ZigZagConversion {
         if (numRows <= 1) {
             return s;
         }
-        int sLength = s.length();
-        int numColumns = getColumns(s.length(), numRows);
-        char[][] map = new char[numRows][numColumns];
-        boolean revert = false;
-        int index = 0;
-        for (int c = 0; c < numColumns; c++) {
-            if (revert) {
-                for (int r = numRows - 2; r > 0; r--) {
-                    if (index >= sLength) {
-                        break;
-                    }
-                    map[r][c] = s.charAt(index++);
-                }
-                revert = false;
-            } else {
-                for (int r = 0; r < numRows; r++) {
-                    if (index >= sLength) {
-                        break;
-                    }
-                    map[r][c] = s.charAt(index++);
-                }
-                if (numRows > 2) {
-                    revert = true;
-                }
+        StringBuilder[] rows = new StringBuilder[Math.min(numRows, s.length())];
+        for (int i = 0; i < Math.min(numRows, s.length()); i++) {
+            rows[i] = new StringBuilder();
+        }
+
+        boolean goingDown = false;
+        int i = 0;
+        for (char c : s.toCharArray()) {
+            rows[i].append(c);
+
+            if (i == rows.length - 1 || i == 0) {
+                goingDown = !goingDown;
             }
+            i += goingDown ? 1 : -1;
         }
 
-        StringBuilder sb = new StringBuilder();
-        for (
-                int r = 0;
-                r < numRows; r++) {
-            for (int c = 0; c < numColumns; c++) {
-                if (map[r][c] > 0) {
-                    sb.append(map[r][c]);
-                }
-
-                System.out.print(map[r][c]);
-            }
-            System.out.println();
+        StringBuilder result = new StringBuilder();
+        for (StringBuilder sb : rows) {
+            result.append(sb);
         }
-        return sb.toString();
-    }
-
-    private static int getColumns(int length, int row) {
-        if (row == 1) {
-            return length;
-        }
-        if (row == 2) {
-            return (int) Math.ceil(length / 2f);
-        }
-
-        return (length / (row + row - 2)) * (row - 1) + Math.max(row, length % (row + row - 2)) - row + 1;
+        return result.toString();
     }
 }

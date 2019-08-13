@@ -24,30 +24,32 @@ package com.kinglloy.leetcode;
  * The median is (2 + 3)/2 = 2.5
  */
 public class MedianOfTwoSortedArrays {
-    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
-        int totalLength = nums1.length + nums2.length;
+    public double findMedianSortedArrays(int[] A, int[] B) {
+        int m = A.length;
+        int n = B.length;
+        int totalLength = m + n;
         boolean odd = totalLength % 2 == 1;
         int position = odd ? totalLength / 2 : totalLength / 2 - 1;
         int[] medians = new int[2];
         boolean needReturn = false;
-        for (int i = 0, j = 0; i < nums1.length || j < nums2.length; ) {
-            if (i < nums1.length && j < nums2.length) {
-                if (nums1[i] < nums2[j]) {
-                    medians[0] = nums1[i];
+        for (int i = 0, j = 0; i < m || j < n; ) {
+            if (i < m && j < n) {
+                if (A[i] < B[j]) {
+                    medians[0] = A[i];
                     i++;
                 } else {
-                    medians[0] = nums2[j];
+                    medians[0] = B[j];
                     j++;
                 }
-            } else if (i < nums1.length) {
-                medians[0] = nums1[i];
+            } else if (i < m) {
+                medians[0] = A[i];
                 i++;
             } else {
-                medians[0] = nums2[j];
+                medians[0] = B[j];
                 j++;
             }
 
-            if(needReturn){
+            if (needReturn) {
                 return (medians[0] + medians[1]) / 2.0;
             }
 
