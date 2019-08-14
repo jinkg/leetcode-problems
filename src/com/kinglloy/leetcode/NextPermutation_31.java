@@ -1,24 +1,31 @@
 package com.kinglloy.leetcode;
 
+import java.util.Arrays;
+
 public class NextPermutation_31 {
-    public void nextPermutation(int[] nums) {
+    public static void main(String[] args) {
+        int[] nums = new int[]{2, 3, 1};
+        nextPermutation(nums);
+        System.out.println(nums);
+    }
+
+    public static void nextPermutation(int[] nums) {
         int n = nums.length;
         boolean changed = false;
         for (int i = n - 1; i > 0; i--) {
-            if (nums[i] >= nums[i - 1]) {
-                if (i == n - 1) {
-                    int tmp = nums[i];
-                    nums[i] = nums[i - 1];
-                    nums[i - 1] = tmp;
-                    changed = true;
-                    break;
-                } else {
-                    int tmp = nums[n - 1];
-                    System.arraycopy(nums, i - 1, nums, i, n - i);
-                    nums[i - 1] = tmp;
-                    changed = true;
-                    break;
+            if (nums[i] > nums[i - 1]) {
+                int k = i;
+                for (int j = i + 1; j < n; j++) {
+                    if (nums[j] < nums[k] && nums[j] > nums[i - 1]) {
+                        k = j;
+                    }
                 }
+                int tmp = nums[k];
+                nums[k] = nums[i - 1];
+                nums[i - 1] = tmp;
+                Arrays.sort(nums, i, n);
+                changed = true;
+                break;
             }
         }
         if (!changed) {
