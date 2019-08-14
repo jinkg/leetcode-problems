@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class CombinationSum_37 {
+public class CombinationSum_39 {
     public static void main(String[] args) {
         List<List<Integer>> r = combinationSum(new int[]{2, 3, 5}, 7);
         System.out.println(r);
@@ -38,7 +38,7 @@ public class CombinationSum_37 {
                     ans.add(l);
                 }
             }
-            removeDuplicate(ans);
+            ans = removeDuplicate(ans);
             return ans;
         } else if (hasEqual) {
             List<List<Integer>> ans = new LinkedList<>();
@@ -49,25 +49,27 @@ public class CombinationSum_37 {
         }
     }
 
-    private static void removeDuplicate(List<List<Integer>> ans) {
-        int n = ans.size();
-
-        List<Integer> needDeleteIndex = new ArrayList<>();
-        for (int i = 0; i < n - 1; i++) {
-            if (elemEqual(ans.get(i), ans.get(i + 1))) {
-                needDeleteIndex.add(i);
+    private static List<List<Integer>> removeDuplicate(List<List<Integer>> ans) {
+        List<List<Integer>> out = new ArrayList<>();
+        for (List<Integer> i : ans) {
+            Collections.sort(i);
+        }
+        for (List<Integer> c : ans) {
+            boolean dup = false;
+            for (List<Integer> o : out) {
+                if (elemEqual(o, c)) {
+                    dup = true;
+                    break;
+                }
+            }
+            if (!dup) {
+                out.add(c);
             }
         }
-
-        int removedCount = 0;
-        for (Integer i : needDeleteIndex) {
-            ans.remove(i - removedCount++);
-        }
+        return out;
     }
 
     private static boolean elemEqual(List<Integer> a, List<Integer> b) {
-        Collections.sort(a);
-        Collections.sort(b);
         if (a.size() != b.size()) {
             return false;
         }
